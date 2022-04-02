@@ -1,0 +1,128 @@
+<div class="container px-4"
+     style="margin-top: 1%;">
+  <div class="row gx-5"
+       *ngIf="!isGridOn"
+       style="margin-top: 1%;">
+    <div class="col">
+
+      Hello! It seems we haven't started generating a grid.... you can click <a
+         [routerLink]="['../','generator']">here</a>
+      to go to the generator page to
+      start
+      one and the grid going
+      or click on this awesome
+      <button type="button"
+              class="btn btn-outline-secondary  btn-sm"
+              (click)="startGeneratingGrid()"> Button </button> to start generating grids!
+    </div>
+  </div>
+  <div class="row gx-5"
+       *ngIf="isGridOn && currentGrid"
+       style="margin-top: 1%;">
+    <div class="col col-center">
+      <div class="card"
+           style="width: fit-content;">
+        <div class="
+            card-body">
+          YOUR CODE NOW: {{currentGrid.code}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row gx-5"
+       *ngIf="isGridOn && currentGrid"
+       style="margin-top: 1%;">
+    <div class="card">
+      <div class="card-body">
+        <form autocomplete="off"
+              (ngSubmit)="onSubmit()"
+              #form="ngForm"
+              [formGroup]="formPayment"
+              class="form-inline">
+          <div class="form-group"
+               style="margin-top: 1%;">
+            <label for="name-input"
+                   class="form-label">Payment Name:</label>
+            <div
+                 [ngClass]="{ 'has-error': (formPayment.get('name')?.errors && (formPayment.get('name')?.dirty || formPayment.get('name')?.touched))}">
+              <input type='text'
+                     id="name-input"
+                     formControlName="name"
+                     class="form-control"
+                     placeholder='Payment 1'>
+            </div>
+            <div *ngIf="formPayment.get('name')?.errors?.['minlength']"
+                 class="error-text">
+              Minimium of 3 characters
+            </div>
+            <div *ngIf="formPayment.get('name')?.errors?.['maxlength']"
+                 class="error-text">
+              Maximum of 50 characters
+            </div>
+          </div>
+          <div style="margin-top: 1%;">
+            <label>Amount:</label>
+            <div
+                 [ngClass]="{ 'has-error': (formPayment.get('amount')?.errors && (formPayment.get('amount')?.dirty || formPayment.get('amount')?.touched))}">
+              <input type='number'
+                     id="charInput"
+                     formControlName="amount"
+                     class="form-control"
+                     placeholder='Amount'>
+            </div>
+            <div *ngIf="formPayment.get('amount')?.errors?.['min']"
+                 class="error-text">
+              Minimium value of 0
+            </div>
+            <div *ngIf="formPayment.get('amount')?.errors?.['max']"
+                 class="error-text">
+              Maximum value of 999999
+            </div>
+          </div>
+          <button [disabled]="formPayment.errors || formPayment.invalid "
+                  class="btn btn-secondary"
+                  type="submit"
+                  style="margin-top: 1%;">
+            Add
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="row gx-5"
+       style="margin-top: 1%;"
+       *ngIf="isGridOn && currentGrid">
+    <ng-container *ngIf="payments$ | async as payments">
+      <table class="table table-bordered align-middle">
+        <thead>
+          <tr>
+            <th scope="col affix"></th>
+            <th *ngFor="let header of headers"
+                scope="col"
+                class="affix">
+              {{header}}
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let payment of payments">
+            <th scope="row">{{ payment.id }}</th>
+            <td>{{payment.name}}</td>
+            <td>{{payment.amount}}</td>
+            <td>{{payment.grid.code}}</td>
+            <td>{{payment.grid.nrOfCells}}</td>
+            <td>
+              <button (click)="deletePayment(payment.id)"
+                      type="button"
+                      class="btn btn-danger">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!(payments && payments.length>0)">There arent any payments to show... Try creating one!</div>
+    </ng-container>
+  </div>
+</div>

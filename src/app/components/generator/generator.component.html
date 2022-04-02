@@ -1,0 +1,89 @@
+<div class="container px-4">
+  <div class="row gx-5">
+    <div class="col">
+      <form class=""
+            [formGroup]="formdados">
+        <div class="form-group">
+          <label for="charInput"
+                 class="form-label">Character</label>
+          <div
+               [ngClass]="{ 'has-error': (formdados.get('character')?.errors && (formdados.get('character')?.dirty || formdados.get('character')?.touched))}">
+            <input type='text'
+                   id="charInput"
+                   formControlName="character"
+                   class="form-control"
+                   placeholder='Character from a to z'>
+          </div>
+          <div *ngIf="formdados.get('character')?.errors?.['maxlength']"
+               class="error-text">
+            Only one character at a time.
+          </div>
+          <div *ngIf="formdados.get('character')?.errors?.['pattern']"
+               class="error-text">
+            Only alphabetic (a to z) characters.
+          </div>
+
+        </div>
+      </form>
+    </div>
+    <div class="col col-button">
+      <button type="button"
+              class="btn btn-secondary"
+              (click)="generateGrid()"
+              *ngIf="!grid">Generate 2D Grid</button>
+      <div *ngIf="grid">
+        <div class="card"
+             style="width: fit-content;">
+          <div class="
+             card-body">
+            YOUR CODE NOW: {{grid.code}}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container px-4 "
+     style="margin-top: 35px;"
+     *ngIf="grid">
+  Grid
+  <div class="table-responsive">
+
+
+    <table class="table table-bordered align-middle">
+      <thead>
+        <tr>
+          <th scope="col affix"></th>
+          <th *ngFor="let item of [].constructor(width); let i = index"
+              scope="col"
+              class="affix">
+            {{ i }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of matrix;let i = index"
+            class="table-light">
+          <th scope="row">{{ i }}</th>
+          <td *ngFor="let cell of row; let j = index">
+            {{matrix[i][j]}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      Ocurrences:
+    </div>
+    <div class="card-body flex-container">
+      <ng-container *ngFor="let occurence of grid.occurences">
+        {{occurence.char}} :
+        {{occurence.occurence}}
+      </ng-container>
+    </div>
+  </div>
+</div>
